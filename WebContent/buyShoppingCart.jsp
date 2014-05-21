@@ -34,7 +34,7 @@ if(session.getAttribute("name")!=null)
 		conn =DriverManager.getConnection(url, user, password);
 		stmt =conn.createStatement();
 		ResultSet rs=null;
-		SQL="select p.name, c.quantity, p.price from products p, users u, sales c where c.uid=u.id and c.pid=p.id and c.uid="+userID;
+		SQL="select p.name, c.quantity, p.price from products p, users u, carts c where c.uid=u.id and c.pid=p.id and c.uid="+userID;
 		rs=stmt.executeQuery(SQL);
 		out.println("<table width=\"80%\"  border=\"1px\" align=\"center\">");
 		out.println("<tr align=\"center\"><td width=\"30%\"><B>Product Name</B></td><td width=\"25%\"><B>Price</B></td><td width=\"25%\"><B>Quantity</B></td><td width=\"20%\"><B>Amount Price</B></td></tr>");

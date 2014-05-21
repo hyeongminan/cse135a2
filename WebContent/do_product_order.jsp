@@ -47,7 +47,7 @@ if(session.getAttribute("name")!=null)
 					String password="880210";
 					conn =DriverManager.getConnection(url, user, password);
 					stmt =conn.createStatement();
-					String  SQL="INSERT INTO sales (uid, pid, quantity,price) VALUES("+userID+", "+pid+", "+quantity+","+price+" );";
+					String  SQL="INSERT INTO carts (uid, pid, quantity,price) VALUES("+userID+", "+pid+", "+quantity+","+price+" );";
 					
 					try{
 						conn.setAutoCommit(false);

@@ -38,7 +38,7 @@ if(session.getAttribute("name")!=null)
 		conn =DriverManager.getConnection(url, user, password);
 		stmt =conn.createStatement();
 		ResultSet rs=null;
-		String SQL="select p.name, c.quantity, p.price from products p, users u, sales c where c.uid=u.id and c.pid=p.id and c.uid="+userID;
+		String SQL="select p.name, c.quantity, p.price from products p, users u, carts c where c.uid=u.id and c.pid=p.id and c.uid="+userID;
 		rs=stmt.executeQuery(SQL);
 		out.println("<table width=\"80%\"  align=\"center\">");
 		String name=null;
