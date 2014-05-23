@@ -25,10 +25,19 @@ if(session.getAttribute("name")!=null)
 		try
 		{
 			try{Class.forName("org.postgresql.Driver");}catch(Exception e){System.out.println("Driver error");}
-			String url="jdbc:postgresql://127.0.0.1:5432/P1";
+			/*String url="jdbc:postgresql://127.0.0.1:5432/P1";
 			String user="postgres";
 			String password="880210";
 			conn =DriverManager.getConnection(url, user, password);
+			
+			//this one is for local host testing to see if faster than server db
+			conn = DriverManager.getConnection(
+		            "jdbc:postgresql://localhost/P1?" +
+		            "user=postgres&password=postgres");*/
+		    String url="jdbc:postgresql://ec2-54-187-115-171.us-west-2.compute.amazonaws.com:5432/cse135"; //database name
+		 	String user="ubuntu";							 //username
+		 	String password="ubuntu";						//password
+		 	conn=DriverManager.getConnection(url, user, password);
 			stmt =conn.createStatement();
 			ResultSet rs=null;
 			rs=stmt.executeQuery("SELECT * FROM categories order by id asc;");
