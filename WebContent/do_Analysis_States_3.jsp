@@ -171,7 +171,7 @@ try
 		</tr>
 	</table>
 	
-	<form method="GET" action="salesAnalytics.jsp">
+	<form method="GET" action="do_Analysis_States_3.jsp">
 	
 		<h3> Row Selection </h3>
 		
@@ -264,13 +264,13 @@ try
 		Category:
 			
 			<select name="category">
-				<option value="all_categories"><%=rs.getString("category")%></option>
+				<option value="all_categories"><%=rs.getString("name")%></option>
 				<%
 				while(rs.next())
 				{
-					categories.add(rs.getString("category"));
+					categories.add(rs.getString("name"));
 				%>
-					<option value="<%=rs.getString("category")%>"><%=rs.getString("category")%></option>
+					<option value="<%=rs.getString("name")%>"><%=rs.getString("name")%></option>
 				<% 
 				} 
 				%>
