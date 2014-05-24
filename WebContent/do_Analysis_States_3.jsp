@@ -36,8 +36,8 @@ ArrayList<Item> p_list=new ArrayList<Item>();
 ArrayList<Item> s_list=new ArrayList<Item>();
 Item item=null;
 Connection conn=null;
-Statement stmt,stmt_2,stmt_3;
-ResultSet rs=null,rs_2=null,rs_3=null;
+Statement stmt,stmt_2,stmt_3, stmt_4;
+ResultSet rs=null,rs_2=null,rs_3=null,rs_4=null;
 String SQL=null;
 try
 {
@@ -61,6 +61,7 @@ try
 	stmt =conn.createStatement();
 	stmt_2 =conn.createStatement();
 	stmt_3 =conn.createStatement();
+	stmt_4 = conn.createStatement();
 	/**SQL_1 for (state, amount)**/
 	String SQL_1="select p.id, p.name, sum(c.quantity*p.price) as amount from products p, sales c "+
 				 "where c.pid=p.id "+
@@ -256,21 +257,22 @@ try
 			</select> <p />
 			
 			
-		<%  //query for categories
-			rs = stmt.executeQuery("SELECT * FROM categories");
-			ArrayList<String> categories = new ArrayList<String>();
-		%>
+		
 			
 		Category:
 			
 			<select name="category">
-				<option value="all_categories"><%=rs.getString("name")%></option>
-				<%
-				while(rs.next())
-				{
-					categories.add(rs.getString("name"));
+				<option value="all_categories">All Categories</option>
+				<%  //query for categories
+					rs_4 = stmt_4.executeQuery("SELECT * FROM categories");
+					ArrayList<String> categories = new ArrayList<String>();
 				%>
-					<option value="<%=rs.getString("name")%>"><%=rs.getString("name")%></option>
+				<%
+				while(rs_4.next())
+				{
+					categories.add(rs_4.getString("name"));
+				%>
+					<option value="<%=rs_4.getString("name")%>"><%=rs_4.getString("name")%></option>
 				<% 
 				} 
 				%>
