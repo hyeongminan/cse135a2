@@ -59,12 +59,12 @@ try
 	stmt_2 =conn.createStatement();
 	stmt_3 =conn.createStatement();
 	/**SQL_1 for (state, amount)**/
-	String SQL_1="select p.id, p.name, sum(c.quantity*p.price) as amount from products p, carts c "+
+	String SQL_1="select p.id, p.name, sum(c.quantity*p.price) as amount from products p, sales c "+
 				 "where c.pid=p.id "+
 				 "group by p.name,p.id "+
 				 "order by  p.name asc "+
 				 "limit 9;";
-	String SQL_2="select  u.state, sum(c.quantity*p.price) as amount from users u, carts c,  products p "+
+	String SQL_2="select  u.state, sum(c.quantity*p.price) as amount from users u, sales c,  products p "+
 				  "where c.uid=u.id and c.pid=p.id "+ 
 				  "group by u.state "+ 
 				  "order by u.state asc "+
