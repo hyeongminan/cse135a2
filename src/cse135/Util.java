@@ -17,6 +17,26 @@ public class Util {
 		return "Hello " + username;
 	}
 	
+	public static final void prev_20_rows(HttpSession session)
+	{
+		int offset = Integer.parseInt((String)session.getAttribute("row_offset")) - 1;
+		if (offset < 0)
+		{
+			offset = 0;
+		}
+		session.setAttribute("row_offset", Integer.toString(offset));
+	}
+	
+	public static final void prev_20_cols(HttpSession session)
+	{
+		int offset = Integer.parseInt((String)session.getAttribute("col_offset")) - 1;
+		if (offset < 0)
+		{
+			offset = 0;
+		}
+		session.setAttribute("col_offset", Integer.toString(offset));
+	}
+	
 	public static final void next_20_rows(HttpSession session)
 	{
 		int offset = Integer.parseInt((String)session.getAttribute("row_offset")) + 1;

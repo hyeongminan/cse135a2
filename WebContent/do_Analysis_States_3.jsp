@@ -67,12 +67,16 @@ try
 				 "where c.pid=p.id "+
 				 "group by p.name,p.id "+
 				 "order by  p.name asc "+
-				 "limit 10;";
+				 "limit 10" +
+				 "offset "+ session.getAttribute("col_offset") +
+				 ";";
 	String SQL_2="select  u.state, sum(c.quantity*p.price) as amount from users u, sales c,  products p "+
 				  "where c.uid=u.id and c.pid=p.id "+ 
 				  "group by u.state "+ 
 				  "order by u.state asc "+
-				  "limit 20;";
+				  "limit 20" +
+				  "offset "+ session.getAttribute("row_offset") +
+		   		  ";";
 
 	rs=stmt.executeQuery(SQL_1);
 	int p_id=0;
