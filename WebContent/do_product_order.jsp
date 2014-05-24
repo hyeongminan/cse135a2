@@ -6,6 +6,7 @@
 </head>
 
 <body >
+<%@ page import="cse135.Util" %>
 <%
 if(session.getAttribute("name")!=null)
 {
@@ -51,10 +52,13 @@ if(session.getAttribute("name")!=null)
 					conn = DriverManager.getConnection(
 				            "jdbc:postgresql://localhost/P1?" +
 				            "user=postgres&password=postgres");*/
-				    String url="jdbc:postgresql://ec2-54-187-115-171.us-west-2.compute.amazonaws.com:5432/cse135"; //database name
-				 	String user="ubuntu";							 //username
-				 	String password="ubuntu";						//password
-				 	conn=DriverManager.getConnection(url, user, password);
+				            conn = DriverManager.getConnection(
+				        	        "jdbc:postgresql://" +
+				        	    	Util.SERVERNAME + ":" +
+				        	    	Util.PORTNUMBER + "/" +
+				        	    	Util.DATABASE,
+				        	    	Util.USERNAME,
+				        	        Util.PASSWORD);
 					stmt =conn.createStatement();
 					String  SQL="INSERT INTO carts (uid, pid, quantity,price) VALUES("+userID+", "+pid+", "+quantity+","+price+" );";
 					

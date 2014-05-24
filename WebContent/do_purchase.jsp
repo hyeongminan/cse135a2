@@ -22,6 +22,7 @@ if(session.getAttribute("name")!=null)
 <div style="width:79%; position:absolute; top:50px; right:0px; height:90%; border-bottom:1px; border-bottom-style:solid;border-left:1px; border-left-style:solid;border-right:1px; border-right-style:solid;border-top:1px; border-top-style:solid;">
 <p><table align="center" width="80%" style="border-bottom-width:2px; border-top-width:2px; border-bottom-style:solid; border-top-style:solid">
 	<tr><td align="left"><font size="+3">
+	<%@ page import="cse135.Util" %>
 	<%
 	String uName=(String)session.getAttribute("name");
 	int userID  = (Integer)session.getAttribute("userID");
@@ -53,10 +54,13 @@ if(session.getAttribute("name")!=null)
 					conn = DriverManager.getConnection(
 				            "jdbc:postgresql://localhost/P1?" +
 				            "user=postgres&password=postgres");*/
-				    String url="jdbc:postgresql://ec2-54-187-115-171.us-west-2.compute.amazonaws.com:5432/cse135"; //database name
-				 	String user="ubuntu";							 //username
-				 	String password="ubuntu";						//password
-				 	conn=DriverManager.getConnection(url, user, password);
+				            conn = DriverManager.getConnection(
+				        	        "jdbc:postgresql://" +
+				        	    	Util.SERVERNAME + ":" +
+				        	    	Util.PORTNUMBER + "/" +
+				        	    	Util.DATABASE,
+				        	    	Util.USERNAME,
+				        	        Util.PASSWORD);
 					stmt =conn.createStatement();
 				
 					try{

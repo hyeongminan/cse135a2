@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" language="java" import="java.sql.*" import="java.util.*" errorPage="" %>
+<%@ page import="cse135.Util" %>
 <%
 String flag_str=null,need_to_connect_db=null;
 int flag=0, role_flag=-1;
@@ -24,10 +25,13 @@ if(("Y").equals(need_to_connect_db))
 			conn = DriverManager.getConnection(
 		            "jdbc:postgresql://localhost/P1?" +
 		            "user=postgres&password=postgres");*/
-		    String url="jdbc:postgresql://ec2-54-187-115-171.us-west-2.compute.amazonaws.com:5432/cse135"; //database name
-		 	String user="ubuntu";							 //username
-		 	String password="ubuntu";						//password
-		 	conn=DriverManager.getConnection(url, user, password);
+		    conn = DriverManager.getConnection(
+			        "jdbc:postgresql://" +
+			    	    	Util.SERVERNAME + ":" +
+			    	    	Util.PORTNUMBER + "/" +
+			    	    	Util.DATABASE,
+			    	    	Util.USERNAME,
+			    	        Util.PASSWORD);
 			stmt =conn.createStatement();
 			ResultSet rs=null;
 			rs=stmt.executeQuery("SELECT * FROM  users where name='"+name+"';");

@@ -6,8 +6,8 @@
 <script type="text/javascript" src="js/js.js" language="javascript"></script>
 </head>
 <body>
+<%@ page import="cse135.Util" %>
 <%
-
 class Item 
 {
 	private int id=0;
@@ -51,10 +51,13 @@ try
 	conn = DriverManager.getConnection(
             "jdbc:postgresql://localhost/P1?" +
             "user=postgres&password=postgres");*/
-    String url="jdbc:postgresql://ec2-54-187-115-171.us-west-2.compute.amazonaws.com:5432/cse135"; //database name
- 	String user="ubuntu";							 //username
- 	String password="ubuntu";						//password
- 	conn=DriverManager.getConnection(url, user, password);
+    conn = DriverManager.getConnection(
+        	        "jdbc:postgresql://" +
+        	    	Util.SERVERNAME + ":" +
+        	    	Util.PORTNUMBER + "/" +
+        	    	Util.DATABASE,
+        	    	Util.USERNAME,
+        	        Util.PASSWORD);
 	stmt =conn.createStatement();
 	stmt_2 =conn.createStatement();
 	stmt_3 =conn.createStatement();

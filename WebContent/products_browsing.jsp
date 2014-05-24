@@ -7,6 +7,8 @@
 
 <body>
 <%@include file="welcome.jsp" %>
+<%@ page import="cse135.Util" %>
+
 <table width="100%"><tr><td align="right"><a href="buyShoppingCart.jsp" target="_self">Buy Shopping Cart</a></td></tr></table>
 <%
 if(session.getAttribute("name")!=null)
@@ -34,10 +36,13 @@ if(session.getAttribute("name")!=null)
 			conn = DriverManager.getConnection(
 		            "jdbc:postgresql://localhost/P1?" +
 		            "user=postgres&password=postgres");*/
-		    String url="jdbc:postgresql://ec2-54-187-115-171.us-west-2.compute.amazonaws.com:5432/cse135"; //database name
-		 	String user="ubuntu";							 //username
-		 	String password="ubuntu";						//password
-		 	conn=DriverManager.getConnection(url, user, password);
+		            conn = DriverManager.getConnection(
+		        	        "jdbc:postgresql://" +
+		        	    	Util.SERVERNAME + ":" +
+		        	    	Util.PORTNUMBER + "/" +
+		        	    	Util.DATABASE,
+		        	    	Util.USERNAME,
+		        	        Util.PASSWORD);
 			stmt =conn.createStatement();
 			ResultSet rs=null;
 			rs=stmt.executeQuery("SELECT * FROM categories order by id asc;");
