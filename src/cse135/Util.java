@@ -17,9 +17,9 @@ public class Util {
 		return "Hello " + username;
 	}
 	
-	public static final void prev_20_rows(HttpSession session)
+	public static final void prev_rows(HttpSession session)
 	{
-		int offset = Integer.parseInt((String)session.getAttribute("row_offset")) - 1;
+		int offset = Integer.parseInt((String)session.getAttribute("row_offset")) - 20;
 		if (offset < 0)
 		{
 			offset = 0;
@@ -27,9 +27,9 @@ public class Util {
 		session.setAttribute("row_offset", Integer.toString(offset));
 	}
 	
-	public static final void prev_20_cols(HttpSession session)
+	public static final void prev_cols(HttpSession session)
 	{
-		int offset = Integer.parseInt((String)session.getAttribute("col_offset")) - 1;
+		int offset = Integer.parseInt((String)session.getAttribute("col_offset")) - 10;
 		if (offset < 0)
 		{
 			offset = 0;
@@ -37,15 +37,15 @@ public class Util {
 		session.setAttribute("col_offset", Integer.toString(offset));
 	}
 	
-	public static final void next_20_rows(HttpSession session)
+	public static final void next_rows(HttpSession session)
 	{
-		int offset = Integer.parseInt((String)session.getAttribute("row_offset")) + 1;
+		int offset = Integer.parseInt((String)session.getAttribute("row_offset")) + 20;
 		session.setAttribute("row_offset", Integer.toString(offset));
 	}
 	
-	public static final void next_20_cols(HttpSession session)
+	public static final void next_cols(HttpSession session)
 	{
-		int offset = Integer.parseInt((String)session.getAttribute("col_offset")) + 1;
+		int offset = Integer.parseInt((String)session.getAttribute("col_offset")) + 10;
 		session.setAttribute("col_offset", Integer.toString(offset));
 	}
 	

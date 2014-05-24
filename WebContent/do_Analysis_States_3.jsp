@@ -63,6 +63,35 @@ try
 	stmt_3 =conn.createStatement();
 	stmt_4 = conn.createStatement();
 	/**SQL_1 for (state, amount)**/
+	
+	if(request.getParameter("action") != null)
+	{
+		String action = request.getParameter("action");
+		System.out.println(action);
+		
+		if(action.equals("Prev20Rows"))
+		{
+			Util.prev_rows(session);
+		}
+		else if(action.equals("Next20Rows"))
+		{
+			Util.next_rows(session); 
+		}
+		else if(action.equals("Prev10Cols"))
+		{
+			Util.prev_cols(session);
+		}
+		else if(action.equals("Next10Cols"))
+		{
+			Util.next_cols(session);
+		}
+		else
+		{
+			Util.reset_rows(session);
+			Util.reset_cols(session);
+		}
+	}
+	
 	String SQL_1="select p.id, p.name, sum(c.quantity*p.price) as amount from products p, sales c "+
 				 "where c.pid=p.id "+
 				 "group by p.name,p.id "+
@@ -160,18 +189,30 @@ try
 %>
 		<tr>
 			<td colspan="5">
-				<input type="button" value="Previous 20 States">
+				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev20Rows">
+					<input type="hidden" name="action" value="Prev20Rows">
+					<input type="submit" value="Previous 20 States">
+				</form>
 			</td>
-			<td colspan="5">
-				<input type="button" value="Next 20 States">
+			<td colspan="6">
+				<form method="GET" action="do_Analysis_States_3.jsp" value="Next20Rows">
+					<input type="hidden" name="action" value="Next20Rows">
+					<input type="submit" value="Next 20 States">
+				</form>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="5">
-				<input type="button" value="Previous 10 Products">
+				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev10Cols">
+					<input type="hidden" name="action" value="Prev10Cols">
+					<input type="submit" value="Previous 10 Products">
+				</form>
 			</td>
-			<td colspan="5">
-				<input type="button" value="Next 10 Products">
+			<td colspan="6">
+				<form method="GET" action="do_Analysis_States_3.jsp" value="Next10Cols">
+					<input type="hidden" name="action" value="Next10Cols">
+					<input type="submit" value="Next 10 Products">
+				</form>
 			</td>
 		</tr>
 	</table>
