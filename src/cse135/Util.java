@@ -1,6 +1,7 @@
 package cse135;
 
 import javax.servlet.http.*;
+//import java
 
 public class Util {
 
@@ -14,6 +15,30 @@ public class Util {
 	public static final String greeting(String username)
 	{
 		return "Hello " + username;
+	}
+	
+	public static final void next_20_rows(HttpSession session)
+	{
+		int offset = Integer.parseInt((String)session.getAttribute("row_offset")) + 1;
+		session.setAttribute("row_offset", Integer.toString(offset));
+	}
+	
+	public static final void next_20_cols(HttpSession session)
+	{
+		int offset = Integer.parseInt((String)session.getAttribute("col_offset")) + 1;
+		session.setAttribute("col_offset", Integer.toString(offset));
+	}
+	
+	public static final void reset_rows(HttpSession session)
+	{
+		int reset = 0;
+		session.setAttribute("row_offset", Integer.toString(reset));
+	}
+	
+	public static final void reset_cols(HttpSession session)
+	{
+		int reset = 0;
+		session.setAttribute("col_offset", Integer.toString(reset));
 	}
 	
 	public static final boolean isLoggedin(HttpSession session)
