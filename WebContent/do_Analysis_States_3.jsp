@@ -67,7 +67,6 @@ try
 	if(request.getParameter("action") != null)
 	{
 		String action = request.getParameter("action");
-		System.out.println(action);
 		
 		if(action.equals("Prev20Rows"))
 		{
@@ -90,6 +89,10 @@ try
 			Util.reset_rows(session);
 			Util.reset_cols(session);
 		}
+	}
+	else {
+		Util.reset_rows(session);
+		Util.reset_cols(session);
 	}
 	
 	String SQL_1="select p.id, p.name, sum(c.quantity*p.price) as amount from products p, sales c "+
