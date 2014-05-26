@@ -39,6 +39,9 @@ Connection conn=null;
 Statement stmt,stmt_2,stmt_3, stmt_4;
 ResultSet rs=null,rs_2=null,rs_3=null,rs_4=null;
 String SQL=null;
+String rows=null, age=null, state=null, category=null, action=null;
+String rows_sql=null, age_sql=null, state_sql=null, category_sql=null, action_sql=null;
+int age_min, age_max;
 try
 {
 	try{Class.forName("org.postgresql.Driver");}catch(Exception e){System.out.println("Driver error");}
@@ -66,7 +69,11 @@ try
 	
 	if(request.getParameter("action") != null)
 	{
-		String action = request.getParameter("action");
+		action = request.getParameter("action");
+		rows = request.getParameter("rows");
+		age = request.getParameter("age");
+		state = request.getParameter("state");
+		category = request.getParameter("category");
 		
 		if(action.equals("Prev20Rows"))
 		{
@@ -89,24 +96,69 @@ try
 			Util.reset_rows(session);
 			Util.reset_cols(session);
 		}
+		
 	}
 	else {
 		Util.reset_rows(session);
 		Util.reset_cols(session);
+		rows = "customers";
+		age = "all";
+		state = "all";
+		category = "all_categories";
 	}
 	
-	String SQL_1="select p.id, p.name, sum(c.quantity*p.price) as amount from products p, sales c "+
-				 "where c.pid=p.id "+
+	if(rows.equals("customers"))
+	{
+		rows_sql = "u.name";
+	}
+	else
+	{
+		rows_sql = "u.state";
+	}
+	
+
+	if(age.equals("all"))
+	{
+		age_sql = "";
+	}
+	else
+	{
+		age_min = Integer.parseInt(age);
+		age_min = 10*age_min;
+		age_max = age_min + 9;
+		age_sql = " and '" + age_min + "'<=u.age and '" + age_max + "'>=u.age";
+	}
+	
+	if(state.equals("all"))
+	{
+		state_sql = "";
+	}
+	else
+	{
+		state_sql = " and '" + state + "'=u.state";
+	}
+	
+	if(category.equals("all_categories"))
+	{
+		category_sql = "";
+	}
+	else
+	{
+		category_sql = " and '" + category + "'=p.name";
+	}
+	
+	String SQL_1="select p.id, p.name, sum(s.quantity*p.price) as amount from products p, sales s "+
+				 "where s.pid=p.id "+category_sql+
 				 "group by p.name,p.id "+
 				 "order by  p.name asc "+
-				 "limit 10" +
+				 "limit 10 " +
 				 "offset "+ session.getAttribute("col_offset") +
 				 ";";
-	String SQL_2="select  u.state, sum(c.quantity*p.price) as amount from users u, sales c,  products p "+
-				  "where c.uid=u.id and c.pid=p.id "+ 
-				  "group by u.state "+ 
-				  "order by u.state asc "+
-				  "limit 20" +
+	String SQL_2="select  "+rows_sql+", sum(s.quantity*p.price) as amount from users u, sales s,  products p "+
+				  "where s.uid=u.id and s.pid=p.id "+age_sql+state_sql+category_sql+
+				  "group by "+rows_sql+" "+ 
+				  "order by "+rows_sql+" asc "+
+				  "limit 20 " +
 				  "offset "+ session.getAttribute("row_offset") +
 		   		  ";";
 
@@ -164,7 +216,7 @@ try
 		s_amount_price	=	s_list.get(i).getAmount_price();
 		out.println("<tr  align=\"center\">");
 		out.println("<td><strong>"+s_name+"["+s_amount_price+"]</strong></td>");
-		for(j=0;j<p_list.size();j++)
+		for(j=0;j<p_list.size();j++) 
 		{
 			p_id			=   p_list.get(j).getId();
 			p_name			=	p_list.get(j).getName();
@@ -194,12 +246,20 @@ try
 			<td colspan="5">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev20Rows">
 					<input type="hidden" name="action" value="Prev20Rows">
+					<input type="hidden" name="rows" value="<%=rows%>">
+					<input type="hidden" name="age" value="<%=age%>">
+					<input type="hidden" name="state" value="<%=state%>">
+					<input type="hidden" name="category" value="<%=category%>">
 					<input type="submit" value="Previous 20 States">
 				</form>
 			</td>
 			<td colspan="6">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Next20Rows">
 					<input type="hidden" name="action" value="Next20Rows">
+					<input type="hidden" name="rows" value="<%=rows%>">
+					<input type="hidden" name="age" value="<%=age%>">
+					<input type="hidden" name="state" value="<%=state%>">
+					<input type="hidden" name="category" value="<%=category%>">
 					<input type="submit" value="Next 20 States">
 				</form>
 			</td>
@@ -208,12 +268,20 @@ try
 			<td colspan="5">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev10Cols">
 					<input type="hidden" name="action" value="Prev10Cols">
+					<input type="hidden" name="rows" value="<%=rows%>">
+					<input type="hidden" name="age" value="<%=age%>">
+					<input type="hidden" name="state" value="<%=state%>">
+					<input type="hidden" name="category" value="<%=category%>">
 					<input type="submit" value="Previous 10 Products">
 				</form>
 			</td>
 			<td colspan="6">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Next10Cols">
 					<input type="hidden" name="action" value="Next10Cols">
+					<input type="hidden" name="rows" value="<%=rows%>">
+					<input type="hidden" name="age" value="<%=age%>">
+					<input type="hidden" name="state" value="<%=state%>">
+					<input type="hidden" name="category" value="<%=category%>">
 					<input type="submit" value="Next 10 Products">
 				</form>
 			</td>
