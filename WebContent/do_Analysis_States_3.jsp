@@ -126,7 +126,7 @@ try
 		age_min = Integer.parseInt(age);
 		age_min = 10*age_min;
 		age_max = age_min + 9;
-		age_sql = " and '" + age_min + "'<=u.age and '" + age_max + "'>=u.age";
+		age_sql = "and '" + age_min + "'<=u.age and '" + age_max + "'>=u.age ";
 	}
 	
 	if(state.equals("all"))
@@ -135,7 +135,7 @@ try
 	}
 	else
 	{
-		state_sql = " and '" + state + "'=u.state";
+		state_sql = "and '" + state + "'=u.state";
 	}
 	
 	if(category.equals("all_categories"))
@@ -144,7 +144,7 @@ try
 	}
 	else
 	{
-		category_sql = " and '" + category + "'=p.name";
+		category_sql = "and '" + category + "'=p.name ";
 	}
 	
 	String SQL_1="select p.id, p.name, sum(s.quantity*p.price) as amount from products p, sales s "+
@@ -198,7 +198,7 @@ try
 %>
 	<table align="center" width="98%" border="1">
 		<tr align="center">
-			<td><strong><font color="#FF0000">STATE</font></strong></td>
+			<td><strong><font color="#FF0000"><%=rows%> </font></strong></td>
 <%	
 	for(i=0;i<p_list.size();i++)
 	{
@@ -250,7 +250,7 @@ try
 					<input type="hidden" name="age" value="<%=age%>">
 					<input type="hidden" name="state" value="<%=state%>">
 					<input type="hidden" name="category" value="<%=category%>">
-					<input type="submit" value="Previous 20 States">
+					<input type="submit" value="Previous 20 <%=rows%>">
 				</form>
 			</td>
 			<td colspan="6">
@@ -260,7 +260,7 @@ try
 					<input type="hidden" name="age" value="<%=age%>">
 					<input type="hidden" name="state" value="<%=state%>">
 					<input type="hidden" name="category" value="<%=category%>">
-					<input type="submit" value="Next 20 States">
+					<input type="submit" value="Next 20 <%=rows%>" %>>
 				</form>
 			</td>
 		</tr>
