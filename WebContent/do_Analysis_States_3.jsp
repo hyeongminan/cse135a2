@@ -135,7 +135,7 @@ try
 	}
 	else
 	{
-		state_sql = "and '" + state + "'=u.state";
+		state_sql = "and '" + state + "'=u.state ";
 	}
 	
 	if(category.equals("all_categories"))
@@ -147,7 +147,7 @@ try
 		category_sql = "and '" + category + "'=p.name ";
 	}
 	
-	String SQL_1="select p.id, p.name, sum(s.quantity*p.price) as amount from products p, sales s "+
+	String SQL_1="select p.id, p.name, sum(s.quantity*p.price) as amount from products p, sales s ,users u "+
 				 "where s.pid=p.id "+age_sql+state_sql+category_sql+
 				 "group by p.name,p.id "+
 				 "order by  p.name asc "+
@@ -223,7 +223,7 @@ try
 			p_amount_price	=	p_list.get(j).getAmount_price();
 			
 			SQL_3="select sum(s.quantity*p.price) as amount from users u, products p, sales s "+
-				 "where s.uid=u.id and s.pid=p.id and u.state='"+s_name+"' and p.id='"+p_id+"' group by u.state, p.name";
+				 "where s.uid=u.id and s.pid=p.id and "+rows_sql+"='"+s_name+"' and p.id='"+p_id+"' "+age_sql+state_sql+category_sql+"group by "+rows_sql+", p.name";
 
 			 rs_3=stmt_3.executeQuery(SQL_3);
 			 if(rs_3.next())
