@@ -7,6 +7,7 @@
 </head>
 <body>
 <%@ page import="cse135.Util" %>
+<p align = "right"> <a href="login.jsp">Back to options</a> <p>
 <%
 class Item 
 {
@@ -41,7 +42,7 @@ ResultSet rs=null,rs_2=null,rs_3=null,rs_4=null;
 String SQL=null;
 String rows=null, age=null, state=null, category=null, action=null;
 String rows_sql=null, age_sql=null, state_sql=null, category_sql=null, action_sql=null;
-int age_min, age_max;
+int age_limit;
 try
 {
 	try{Class.forName("org.postgresql.Driver");}catch(Exception e){System.out.println("Driver error");}
@@ -49,18 +50,18 @@ try
 	String user="postgres";
 	String password="880210";
 	conn =DriverManager.getConnection(url, user, password);
-	
+	*/
 	//this one is for local host testing to see if faster than server db
 	conn = DriverManager.getConnection(
             "jdbc:postgresql://localhost/P1?" +
-            "user=postgres&password=postgres");*/
+            "user=postgres&password=postgres");/*
     conn = DriverManager.getConnection(
         	        "jdbc:postgresql://" +
         	    	Util.SERVERNAME + ":" +
         	    	Util.PORTNUMBER + "/" +
         	    	Util.DATABASE,
         	    	Util.USERNAME,
-        	        Util.PASSWORD);
+        	        Util.PASSWORD);*/
 	stmt =conn.createStatement();
 	stmt_2 =conn.createStatement();
 	stmt_3 =conn.createStatement();
@@ -101,6 +102,7 @@ try
 	else {
 		Util.reset_rows(session);
 		Util.reset_cols(session);
+		action = "";
 		rows = "customers";
 		age = "all";
 		state = "all";
@@ -123,10 +125,24 @@ try
 	}
 	else
 	{
-		age_min = Integer.parseInt(age);
-		age_min = 10*age_min;
-		age_max = age_min + 9;
-		age_sql = "and '" + age_min + "'<=u.age and '" + age_max + "'>=u.age ";
+		age_limit = Integer.parseInt(age);
+		if(age_limit == 0)
+		{
+			age_sql = "and '" + 12 + "'<=u.age and '" + 18 + "'>=u.age ";
+		}
+		else if(age_limit == 1)
+		{
+			age_sql = "and '" + 18 + "'<=u.age and '" + 45 + "'>=u.age ";
+		}
+		else if(age_limit == 2)
+		{
+			age_sql = "and '" + 45 + "'<=u.age and '" + 65 + "'>=u.age ";
+		}
+		else 
+		{
+			age_sql = "and '" + 65 + "'<=u.age ";
+		}
+		
 	}
 	
 	if(state.equals("all"))
@@ -243,7 +259,8 @@ try
 	session.setAttribute("TOP_10_Products",p_list);
 %>
 		<tr>
-			<td colspan="5">
+		<!--
+			<td colspan="">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev20Rows">
 					<input type="hidden" name="action" value="Prev20Rows">
 					<input type="hidden" name="rows" value="<%=rows%>">
@@ -252,8 +269,8 @@ try
 					<input type="hidden" name="category" value="<%=category%>">
 					<input type="submit" value="Previous 20 <%=rows%>">
 				</form>
-			</td>
-			<td colspan="6">
+			</td> -->
+			<td colspan="11">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Next20Rows">
 					<input type="hidden" name="action" value="Next20Rows">
 					<input type="hidden" name="rows" value="<%=rows%>">
@@ -262,10 +279,11 @@ try
 					<input type="hidden" name="category" value="<%=category%>">
 					<input type="submit" value="Next 20 <%=rows%>">
 				</form>
-			</td>
+			</td> 
 		</tr>
 		<tr>
-			<td colspan="5">
+		<!--
+			<td colspan="10">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev10Cols">
 					<input type="hidden" name="action" value="Prev10Cols">
 					<input type="hidden" name="rows" value="<%=rows%>">
@@ -274,8 +292,9 @@ try
 					<input type="hidden" name="category" value="<%=category%>">
 					<input type="submit" value="Previous 10 Products">
 				</form>
-			</td>
-			<td colspan="6">
+			</td> -->
+			
+			<td colspan="11">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Next10Cols">
 					<input type="hidden" name="action" value="Next10Cols">
 					<input type="hidden" name="rows" value="<%=rows%>">
@@ -287,7 +306,10 @@ try
 			</td>
 		</tr>
 	</table>
-	
+	<% 
+	if(!(action.equals("Next20Rows") || action.equals("Next20Cols")))
+	{
+	%>
 	<form method="GET" action="do_Analysis_States_3.jsp">
 	
 		<h3> Row Selection </h3>
@@ -305,16 +327,10 @@ try
 		Age:
 			<select name="age">
 				<option value="all" selected="selected">All</option>
-				<option value="0">0-9</option>
-				<option value="1">10-19</option>
-				<option value="2">20-29</option>
-				<option value="3">30-39</option>
-				<option value="4">40-49</option>
-				<option value="5">50-59</option>
-				<option value="6">60-69</option>
-				<option value="7">70-79</option>
-				<option value="8">80-89</option>
-				<option value="9">90-99</option>
+				<option value="0">12-18</option>
+				<option value="1">18-45</option>
+				<option value="2">45-65</option>
+				<option value="3">65-</option>
 			</select> <p/>
 		
 		State: 
@@ -397,6 +413,7 @@ try
 			
 	<input type="submit" name="action" value="Run Query"/>
 <%
+	}
 }
 catch(Exception e)
 {
