@@ -14,7 +14,7 @@ class Item
 	private String name=null;
 	private float amount_price=0f;
 	public int getId() {
-		return id;
+		return id; 
 	}
 	public void setId(int id) {
 		this.id = id;
@@ -148,7 +148,7 @@ try
 	}
 	
 	String SQL_1="select p.id, p.name, sum(s.quantity*p.price) as amount from products p, sales s "+
-				 "where s.pid=p.id "+category_sql+
+				 "where s.pid=p.id "+age_sql+state_sql+category_sql+
 				 "group by p.name,p.id "+
 				 "order by  p.name asc "+
 				 "limit 10 " +
@@ -222,8 +222,8 @@ try
 			p_name			=	p_list.get(j).getName();
 			p_amount_price	=	p_list.get(j).getAmount_price();
 			
-			SQL_3="select sum(c.quantity*p.price) as amount from users u, products p, carts c "+
-				 "where c.uid=u.id and c.pid=p.id and u.state='"+s_name+"' and p.id='"+p_id+"' group by u.state, p.name";
+			SQL_3="select sum(s.quantity*p.price) as amount from users u, products p, sales s "+
+				 "where s.uid=u.id and s.pid=p.id and u.state='"+s_name+"' and p.id='"+p_id+"' group by u.state, p.name";
 
 			 rs_3=stmt_3.executeQuery(SQL_3);
 			 if(rs_3.next())
@@ -260,7 +260,7 @@ try
 					<input type="hidden" name="age" value="<%=age%>">
 					<input type="hidden" name="state" value="<%=state%>">
 					<input type="hidden" name="category" value="<%=category%>">
-					<input type="submit" value="Next 20 <%=rows%>" %>>
+					<input type="submit" value="Next 20 <%=rows%>">
 				</form>
 			</td>
 		</tr>
