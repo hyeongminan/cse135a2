@@ -239,7 +239,7 @@ try
 			p_amount_price	=	p_list.get(j).getAmount_price();
 			
 			SQL_3="select sum(s.quantity*p.price) as amount from users u, products p, sales s "+
-				 "where s.uid=u.id and s.pid=p.id and "+rows_sql+"='"+s_name+"' and p.id='"+p_id+"' "+age_sql+state_sql+category_sql+"group by "+rows_sql+", p.name";
+				 "where s.uid=u.id and s.pid=p.id and "+rows_sql+"='"+s_name+"' and p.id='"+p_id+"' group by "+rows_sql+", p.name";
 
 			 rs_3=stmt_3.executeQuery(SQL_3);
 			 if(rs_3.next())
@@ -336,56 +336,55 @@ try
 		State: 
 			<select name="state">
 				<option value="all">All States</option>
-				<option value="al">AL</option>
-				<option value="ak">AK</option>
-				<option value="az">AZ</option>
-				<option value="ar">AR</option>
-				<option value="ca">CA</option>
-				<option value="co">CO</option>
-				<option value="ct">CT</option>
-				<option value="de">DE</option>
-				<option value="dc">DC</option>
-				<option value="fl">FL</option>
-				<option value="ga">GA</option>
-				<option value="hi">HI</option>
-				<option value="id">ID</option>
-				<option value="il">IL</option>
-				<option value="ia">IA</option>
-				<option value="in">IN</option>
-				<option value="ks">KS</option>
-				<option value="ky">KY</option>
-				<option value="la">LA</option>
-				<option value="me">ME</option>
-				<option value="md">MD</option>
-				<option value="ma">MA</option>
-				<option value="mi">MI</option>
-				<option value="mn">MN</option>
-				<option value="ms">MS</option>
-				<option value="mo">MO</option>
-				<option value="mt">MT</option>
-				<option value="ne">NE</option>
-				<option value="nv">NV</option>
-				<option value="nh">NH</option>
-				<option value="nm">NM</option>
-				<option value="my">MY</option>
-				<option value="nc">NC</option>
-				<option value="nd">ND</option>
-				<option value="oh">OH</option>
-				<option value="ok">OK</option>
-				<option value="or">OR</option>
-				<option value="pa">PA</option>
-				<option value="ri">RI</option>
-				<option value="sc">SC</option>
-				<option value="sd">SD</option>
-				<option value="tn">TN</option>
-				<option value="tx">TX</option>
-				<option value="ut">UT</option>
-				<option value="vt">VT</option>
-				<option value="va">VA</option>
-				<option value="wa">WA</option>
-				<option value="wv">WV</option>
-				<option value="wi">WI</option>
-				<option value="wy">WY</option>			
+				<option value="Alaska">Alaska</option>
+				<option value="Arizona">Arizona</option> 
+				<option value="Arkansas">Arkansas</option> 
+				<option value="California">California</option> 
+				<option value="Colorado">Colorado</option> 
+				<option value="Connecticut">Connecticut</option> 
+				<option value="Delaware">Delaware</option> 
+				<option value="Florida">Florida</option> 
+				<option value="Georgia">Georgia</option> 
+				<option value="Hawaii">Hawaii</option> 
+				<option value="Idaho">Idaho</option> 
+				<option value="Illinois">Illinois</option> 
+				<option value="Indiana">Indiana</option> 
+				<option value="Iowa">Iowa</option> 
+				<option value="Kansas">Kansas</option> 
+				<option value="Kentucky">Kentucky</option> 
+				<option value="Louisiana">Louisiana</option> 
+				<option value="Maine">Maine</option> 
+				<option value="Maryland">Maryland</option> 
+				<option value="Massachusetts">Massachusetts</option> 
+				<option value="Michigan">Michigan</option> 
+				<option value="Minnesota">Minnesota</option> 
+				<option value="Mississippi">Mississippi</option> 
+				<option value="Missouri">Missouri</option> 
+				<option value="Montana">Montana</option> 
+				<option value="Nebraska">Nebraska</option> 
+				<option value="Nevada">Nevada</option> 
+				<option value="New Hampshire">New Hampshire</option> 
+				<option value="New Jersey">New Jersey</option> 
+				<option value="New Mexico">New Mexico</option>
+				<option value="New York">New York</option>
+			 	<option value="North Carolina">North Carolina</option> 
+			 	<option value="North Dakota">North Dakota</option> 
+			 	<option value="Ohio">Ohio</option> 
+			 	<option value="Oklahoma">Oklahoma</option> 
+			 	<option value="Oregon">Oregon</option> 
+			 	<option value="Pennsylvania">Pennsylvania</option> 
+			 	<option value="Rhode Island">Rhode Island</option> 
+			 	<option value="South Carolina">South Carolina</option> 
+			 	<option value="South Dakota">South Dakota</option> 
+			 	<option value="Tennessee">Tennessee</option> 
+			 	<option value="Texas">Texas</option> 
+			 	<option value="Utah">Utah</option> 
+			 	<option value="Vermont">Vermont</option> 
+			 	<option value="Virginia">Virginia</option> 
+			 	<option value="Washington">Washington</option> 
+			 	<option value="West Virginia">West Virginia</option> 
+			 	<option value="Wisconsin">Wisconsin</option> 
+			 	<option value="Wyoming">Wyoming</option> 
 			</select> <p />
 			
 			
