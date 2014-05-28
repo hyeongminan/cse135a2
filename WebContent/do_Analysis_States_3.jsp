@@ -46,22 +46,27 @@ int age_limit;
 try
 {
 	try{Class.forName("org.postgresql.Driver");}catch(Exception e){System.out.println("Driver error");}
-	/*String url="jdbc:postgresql://127.0.0.1:5432/P1";
+	
+	/*
+	String url="jdbc:postgresql://127.0.0.1:5432/P1";
 	String user="postgres";
-	String password="880210";
+	String password="postgres";
 	conn =DriverManager.getConnection(url, user, password);
 	*/
+	/*
 	//this one is for local host testing to see if faster than server db
 	conn = DriverManager.getConnection(
             "jdbc:postgresql://localhost/P1?" +
-            "user=postgres&password=postgres");/*
+            "user=postgres&password=postgres");
+	*/
+	
     conn = DriverManager.getConnection(
         	        "jdbc:postgresql://" +
         	    	Util.SERVERNAME + ":" +
         	    	Util.PORTNUMBER + "/" +
         	    	Util.DATABASE,
         	    	Util.USERNAME,
-        	        Util.PASSWORD);*/
+        	        Util.PASSWORD);
 	stmt =conn.createStatement();
 	stmt_2 =conn.createStatement();
 	stmt_3 =conn.createStatement();
@@ -258,7 +263,7 @@ try
 	
 	session.setAttribute("TOP_10_Products",p_list);
 %>
-		<tr>
+		<tr align="right">
 		<!--
 			<td colspan="">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev20Rows">
@@ -270,7 +275,7 @@ try
 					<input type="submit" value="Previous 20 <%=rows%>">
 				</form>
 			</td> -->
-			<td colspan="11">
+			<td colspan="11" >
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Next20Rows">
 					<input type="hidden" name="action" value="Next20Rows">
 					<input type="hidden" name="rows" value="<%=rows%>">
@@ -281,7 +286,7 @@ try
 				</form>
 			</td> 
 		</tr>
-		<tr>
+		<tr align="right">
 		<!--
 			<td colspan="10">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev10Cols">
@@ -317,7 +322,7 @@ try
 		Row:
 				<select name="rows">
 		
-				<option value="customers">Customers</option>
+				<option value="customers" selected="selected">Customers</option>
 				<option value="states">States</option>
 				
 				</select> <p />
@@ -335,7 +340,7 @@ try
 		
 		State: 
 			<select name="state">
-				<option value="all">All States</option>
+				<option value="all" selected="selected">All States</option>
 				<option value="Alaska">Alaska</option>
 				<option value="Arizona">Arizona</option> 
 				<option value="Arkansas">Arkansas</option> 
@@ -393,7 +398,7 @@ try
 		Category:
 			
 			<select name="category">
-				<option value="all_categories">All Categories</option>
+				<option value="all_categories" selected="selected">All Categories</option>
 				<%  //query for categories
 					rs_4 = stmt_4.executeQuery("SELECT * FROM categories");
 					ArrayList<String> categories = new ArrayList<String>();

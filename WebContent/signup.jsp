@@ -104,15 +104,22 @@ if(name!=null && age!=null && role!=null && state!=null)
 	{
 		String  SQL="INSERT INTO users (name, role, age, state) VALUES('"+name+"','"+role+"',"+age+",'"+state+"');";
 		try{Class.forName("org.postgresql.Driver");}catch(Exception e){System.out.println("Driver error");}
-		/*String url="jdbc:postgresql://127.0.0.1:5432/P1";
-		String user="postgres";
-		String password="880210";
-		conn =DriverManager.getConnection(url, user, password);
 		
+		/*
+		String url="jdbc:postgresql://127.0.0.1:5432/P1";
+		String user="postgres";
+		String password="postgres";
+		conn =DriverManager.getConnection(url, user, password);
+		*/
+		
+		/*
 		//this one is for local host testing to see if faster than server db
 		conn = DriverManager.getConnection(
 	            "jdbc:postgresql://localhost/P1?" +
-	            "user=postgres&password=postgres");*/
+	            "user=postgres&password=postgres");
+		*/
+	            
+	            
 	    conn = DriverManager.getConnection(
 		        "jdbc:postgresql://" +
 		    	    	Util.SERVERNAME + ":" +
@@ -120,6 +127,7 @@ if(name!=null && age!=null && role!=null && state!=null)
 		    	    	Util.DATABASE,
 		    	    	Util.USERNAME,
 		    	        Util.PASSWORD);
+	            
 		stmt =conn.createStatement();
 		try{
 			conn.setAutoCommit(false);

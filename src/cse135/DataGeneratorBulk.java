@@ -35,10 +35,10 @@ public class DataGeneratorBulk
 	public static void main(String[] args) throws Exception
 	{
 
-		int Num_users		=	100000; //100
-		int Num_categories	=	20;  //10
-		int Num_products	=	10000;//1000
-		int Num_sales		=	100000;//10000
+		int Num_users		=	100;  //100    100000
+		int Num_categories	=	10;   //10     20
+		int Num_products	=	1000; //1000   10000
+		int Num_sales		=	10000;//10000 100000
 		
 		 String  usersPath		=	"/home/eddie/Documents/users.txt",
 	    		 categoriesPath	=	"/home/eddie/Documents/categories.txt",
