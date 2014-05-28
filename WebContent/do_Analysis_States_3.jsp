@@ -347,7 +347,7 @@ try
 		%>
 	</table>
 	<% 
-	if(!(action.equals("Next20Rows") || action.equals("Next20Cols")))
+	if(!(action.equals("Next20Rows") || action.equals("Next10Cols")))
 	{
 	%>
 	<form method="GET" action="do_Analysis_States_3.jsp">
