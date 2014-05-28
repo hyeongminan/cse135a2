@@ -182,11 +182,11 @@ try
 	}
 	else
 	{
-		category_sql = "and '" + category + "'=c.name ";
+		category_sql = "and '" + category + "'=c.name and p.cid=c.id ";
 	}
 	
 	String SQL_1="select p.id, p.name, sum(s.quantity*p.price) as amount from products p, sales s ,users u, categories c "+
-				 "where s.pid=p.id "+age_sql+state_sql+category_sql+
+				 "where s.uid=u.id and s.pid=p.id "+age_sql+state_sql+category_sql+
 				 "group by p.name,p.id "+
 				 "order by  p.name asc "+
 				 "limit 11 " +
@@ -231,6 +231,7 @@ try
 	}	
 //    out.println("product #:"+p_list.size()+"<br>state #:"+s_list.size()+"<p>");
 	int i=0,j=0;
+	int limit1=0, limit2=0;
 	String SQL_3="";	
 	float amount=0;
 %>
@@ -238,7 +239,9 @@ try
 		<tr align="center">
 			<td><strong><font color="#FF0000"><%=rows%> </font></strong></td>
 <%	
-	for(i=0;i<Math.min(10,p_list.size());i++)
+	limit1=Math.min(10,p_list.size());
+	limit2=Math.min(20,s_list.size());
+	for(i=0;i<limit1;i++)
 	{
 		p_id			=   p_list.get(i).getId();
 		p_name			=	p_list.get(i).getName();
@@ -248,13 +251,13 @@ try
 %>
 		</tr>
 <%	
-	for(i=0;i<Math.min(20,s_list.size());i++)
+	for(i=0;i<limit2;i++)
 	{
 		s_name			=	s_list.get(i).getName();
 		s_amount_price	=	s_list.get(i).getAmount_price();
 		out.println("<tr  align=\"center\">");
 		out.println("<td><strong>"+s_name+"["+s_amount_price+"]</strong></td>");
-		for(j=0;j<Math.min(10,p_list.size());j++) 
+		for(j=0;j<limit1;j++) 
 		{
 			p_id			=   p_list.get(j).getId();
 			p_name			=	p_list.get(j).getName();
