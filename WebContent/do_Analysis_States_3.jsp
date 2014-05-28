@@ -38,8 +38,8 @@ ArrayList<Item> p_list=new ArrayList<Item>();
 ArrayList<Item> s_list=new ArrayList<Item>();
 Item item=null;
 Connection conn=null;
-Statement stmt,stmt_2,stmt_3, stmt_4;
-ResultSet rs=null,rs_2=null,rs_3=null,rs_4=null;
+Statement stmt,stmt_2,stmt_3, stmt_4,stmt_5;
+ResultSet rs=null,rs_2=null,rs_3=null,rs_4=null, rs_5=null;
 String SQL=null;
 String rows=null, age=null, state=null, category=null, action=null;
 String rows_sql=null, age_sql=null, state_sql=null, category_sql=null, action_sql=null;
@@ -102,12 +102,12 @@ try
 		}
 		else if(action.equals("Prev10Cols"))
 		{
-			col_offset = Util.prev_rows(col_offset);
+			col_offset = Util.prev_cols(col_offset);
 			//Util.prev_cols(session);
 		}
 		else if(action.equals("Next10Cols"))
 		{
-			col_offset = Util.next_rows(col_offset);
+			col_offset = Util.next_cols(col_offset);
 			//Util.next_cols(session);
 		}
 		else
@@ -178,28 +178,49 @@ try
 	
 	if(category.equals("all_categories"))
 	{
-		category_sql = "";
+		category_sql = "and p.cid=c.id ";
 	}
 	else
 	{
 		category_sql = "and '" + category + "'=c.name and p.cid=c.id ";
 	}
 	
-	String SQL_1="select p.id, p.name, sum(s.quantity*p.price) as amount from products p, sales s ,users u, categories c "+
+	String SQL_1="create temporary table temp1 AS " +
+				 "select p.id, p.name, p.price, sum(s.quantity*p.price) as amount from products p, sales s ,users u, categories c "+
 				 "where s.uid=u.id and s.pid=p.id "+age_sql+state_sql+category_sql+
-				 "group by p.name,p.id "+
+				 "group by p.name,p.id,p.price "+
 				 "order by  p.name asc "+
-				 "limit 11 " +
+				 "limit 10 " +
 				 "offset "+ col_offset +
 				 ";";
-	String SQL_2="select  "+rows_sql+", sum(s.quantity*p.price) as amount from users u, sales s,  products p, categories c "+
-				  "where s.uid=u.id and s.pid=p.id "+age_sql+state_sql+category_sql+
-				  "group by "+rows_sql+" "+ 
-				  "order by "+rows_sql+" asc "+
-				  "limit 21 " +
-				  "offset "+ row_offset +
-		   		  ";";
+				 
+				 
+	String SQL_2 = "";
+	if(rows.equals("customers"))
+	{
+		SQL_2="create temporary table temp AS " +
+					 "select  "+rows_sql+", sum(s.quantity*p.price) as amount, u.id from users u, sales s,  products p, categories c "+
+					 "where s.uid=u.id and s.pid=p.id "+age_sql+state_sql+category_sql+
+					 "group by "+rows_sql+", u.id "+ 
+					 "order by "+rows_sql+" asc "+
+					 "limit 20 " +
+					 "offset "+ row_offset +
+			   		 ";";
+	}
+	else
+	{
+		SQL_2="create temporary table temp AS " +
+				 "select  "+rows_sql+", sum(s.quantity*p.price) as amount from users u, sales s,  products p, categories c "+
+				 "where s.uid=u.id and s.pid=p.id "+age_sql+state_sql+category_sql+
+				 "group by "+rows_sql + " " +  
+				 "order by "+rows_sql+" asc "+
+				 "limit 20 " +
+				 "offset "+ row_offset +
+		   		 ";";
+	}
 
+	stmt.execute(SQL_1);
+	SQL_1 = "select * from temp1;";
 	rs=stmt.executeQuery(SQL_1);
 	int p_id=0;
 	String p_name=null;
@@ -208,7 +229,7 @@ try
 	{
 		p_id=rs.getInt(1);
 		p_name=rs.getString(2);
-		p_amount_price=rs.getFloat(3);
+		p_amount_price=rs.getFloat(4);
 		item=new Item();
 		item.setId(p_id);
 		item.setName(p_name);
@@ -217,6 +238,8 @@ try
 	
 	}
 	
+	stmt.execute(SQL_2);
+	SQL_2 = "select * from temp;";
 	rs_2=stmt_2.executeQuery(SQL_2);//state not id, many users in one state
 	String s_name=null;
 	float s_amount_price=0;
@@ -229,10 +252,32 @@ try
 		item.setAmount_price(s_amount_price);
 		s_list.add(item);
 	}	
+	
+	String SQL_3 = "";
+	
+	if(rows.equals("customers"))
+	{
+		SQL_3 = "select c.name as cname, p.name as pname, sum(p.price * s.quantity) as sale from temp c, temp1 p, sales s " +
+				"where s.uid=c.id and s.pid=p.id "+
+				"group by c.name, p.name " +
+				"order by c.name asc;";
+	}
+	else
+	{
+		SQL_3 = "select c.state, p.name, sum(p.price * s.quantity) as sale from temp c, temp1 p, sales s, users u " +
+				"where s.uid=u.id and s.pid=p.id and c.state=u.state "+
+				"group by c.state, p.name " +
+				"order by c.state asc;";
+	}
+			
+	rs_3=stmt_3.executeQuery(SQL_3);
+	rs_3.next();
+		
+	
 //    out.println("product #:"+p_list.size()+"<br>state #:"+s_list.size()+"<p>");
 	int i=0,j=0;
 	int limit1=0, limit2=0;
-	String SQL_3="";	
+	//String SQL_3="";	
 	float amount=0;
 %>
 	<table align="center" width="98%" border="1">
@@ -251,18 +296,34 @@ try
 %>
 		</tr>
 <%	
+	boolean rs_3_empty_flag = false;
 	for(i=0;i<limit2;i++)
 	{
 		s_name			=	s_list.get(i).getName();
 		s_amount_price	=	s_list.get(i).getAmount_price();
 		out.println("<tr  align=\"center\">");
 		out.println("<td><strong>"+s_name+"["+s_amount_price+"]</strong></td>");
+		
 		for(j=0;j<limit1;j++) 
 		{
+			
 			p_id			=   p_list.get(j).getId();
 			p_name			=	p_list.get(j).getName();
-			p_amount_price	=	p_list.get(j).getAmount_price();
 			
+			
+			if(!rs_3_empty_flag && s_name.equals(rs_3.getString(1)) && p_name.equals(rs_3.getString(2)))
+			{
+				out.print("<td><font color='#0000ff'>"+rs_3.getFloat(3)+"</font></td>");
+				if(!rs_3.next())
+					rs_3_empty_flag = true;
+			}
+			else
+			{
+				out.println("<td><font color='#ff0000'>0</font></td>");
+			}
+			
+
+			/*
 			SQL_3="select sum(s.quantity*p.price) as amount from users u, products p, sales s "+
 				 "where s.uid=u.id and s.pid=p.id and "+rows_sql+"='"+s_name+"' and p.id='"+p_id+"' group by "+rows_sql+", p.name";
 
@@ -276,6 +337,7 @@ try
 			 {
 			 	out.println("<td><font color='#ff0000'>0</font></td>");
 			 }
+			 */
 
 		}
 		out.println("</tr>");
@@ -283,10 +345,10 @@ try
 	
 	session.setAttribute("TOP_10_Products",p_list);
 	
-	if(s_list.size() == 21)
+	if(s_list.size() == 20)
 	{
 %>
-		<tr align="left">
+		<tr align="right">
 		<!--
 			<td colspan="">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev20Rows">
@@ -313,10 +375,10 @@ try
 		</tr>
 		<%
 	}
-	if(p_list.size()==11)
+	if(p_list.size()==10)
 	{
 		%>
-		<tr align="left">
+		<tr align="right">
 		<!--
 			<td colspan="10">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev10Cols">
