@@ -7,6 +7,7 @@
 </head>
 <body>
 <%@ page import="cse135.Util" %>
+<%@ page import="java.lang.Math;" %>
 <p align = "right"> <a href="login.jsp">Back to options</a> <p>
 <%
 class Item 
@@ -181,21 +182,21 @@ try
 	}
 	else
 	{
-		category_sql = "and '" + category + "'=p.name ";
+		category_sql = "and '" + category + "'=c.name ";
 	}
 	
-	String SQL_1="select p.id, p.name, sum(s.quantity*p.price) as amount from products p, sales s ,users u "+
+	String SQL_1="select p.id, p.name, sum(s.quantity*p.price) as amount from products p, sales s ,users u, categories c "+
 				 "where s.pid=p.id "+age_sql+state_sql+category_sql+
 				 "group by p.name,p.id "+
 				 "order by  p.name asc "+
-				 "limit 10 " +
+				 "limit 11 " +
 				 "offset "+ col_offset +
 				 ";";
-	String SQL_2="select  "+rows_sql+", sum(s.quantity*p.price) as amount from users u, sales s,  products p "+
+	String SQL_2="select  "+rows_sql+", sum(s.quantity*p.price) as amount from users u, sales s,  products p, categories c "+
 				  "where s.uid=u.id and s.pid=p.id "+age_sql+state_sql+category_sql+
 				  "group by "+rows_sql+" "+ 
 				  "order by "+rows_sql+" asc "+
-				  "limit 20 " +
+				  "limit 21 " +
 				  "offset "+ row_offset +
 		   		  ";";
 
@@ -237,7 +238,7 @@ try
 		<tr align="center">
 			<td><strong><font color="#FF0000"><%=rows%> </font></strong></td>
 <%	
-	for(i=0;i<p_list.size();i++)
+	for(i=0;i<Math.min(10,p_list.size());i++)
 	{
 		p_id			=   p_list.get(i).getId();
 		p_name			=	p_list.get(i).getName();
@@ -247,13 +248,13 @@ try
 %>
 		</tr>
 <%	
-	for(i=0;i<s_list.size();i++)
+	for(i=0;i<Math.min(20,s_list.size());i++)
 	{
 		s_name			=	s_list.get(i).getName();
 		s_amount_price	=	s_list.get(i).getAmount_price();
 		out.println("<tr  align=\"center\">");
 		out.println("<td><strong>"+s_name+"["+s_amount_price+"]</strong></td>");
-		for(j=0;j<p_list.size();j++) 
+		for(j=0;j<Math.min(10,p_list.size());j++) 
 		{
 			p_id			=   p_list.get(j).getId();
 			p_name			=	p_list.get(j).getName();
@@ -278,8 +279,11 @@ try
 	}
 	
 	session.setAttribute("TOP_10_Products",p_list);
+	
+	if(s_list.size() == 21)
+	{
 %>
-		<tr align="right">
+		<tr align="left">
 		<!--
 			<td colspan="">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev20Rows">
@@ -304,7 +308,12 @@ try
 				</form>
 			</td> 
 		</tr>
-		<tr align="right">
+		<%
+	}
+	if(p_list.size()==11)
+	{
+		%>
+		<tr align="left">
 		<!--
 			<td colspan="10">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Prev10Cols">
@@ -330,6 +339,9 @@ try
 				</form>
 			</td>
 		</tr>
+		<%
+	}
+		%>
 	</table>
 	<% 
 	if(!(action.equals("Next20Rows") || action.equals("Next20Cols")))
@@ -427,9 +439,10 @@ try
 				<%
 				while(rs_4.next())
 				{
-					categories.add(rs_4.getString("name"));
+					String cat = rs_4.getString("name");
+					categories.add(cat);
 				%>
-					<option value="<%=rs_4.getString("name")%>" <%=Util.selector(rs_4.getString("name"),category)%>><%=rs_4.getString("name")%></option>
+					<option value="<%=cat%>" <%=Util.selector(cat,category)%>><%=cat%></option>
 				<% 
 				} 
 				%>
