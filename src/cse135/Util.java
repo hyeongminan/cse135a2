@@ -24,73 +24,66 @@ public class Util {
 		return "Hello " + username;
 	}
 	
+	public static final String selector(String selected, String passed_through)
+	{
+		if(selected.equals(passed_through))
+			return "selected=\"selected\"";
+		else
+			return "";
+	}
 	
-	public static final void prev_rows(HttpSession session)
+	public static final int prev_rows(int row_offset)
 	{
 		int offset = 0;
-		if(session.getAttribute("row_offset") == null)
+		if(row_offset == 0)
 		{
 			offset = 0;
 		}
 		else
 		{
-			offset = Integer.parseInt((String)session.getAttribute("row_offset")) - 20;
+			offset = row_offset - 20;
 		}
 		if (offset < 0)
 		{
 			offset = 0;
 		}
-		session.setAttribute("row_offset", Integer.toString(offset));
+		return offset;
 	}
 	
 	
-	public static final void prev_cols(HttpSession session)
+	public static final int prev_cols(int col_offset)
 	{
 		int offset = 0;
-		if(session.getAttribute("col_offset") == null)
+		if(col_offset == 0)
 		{
 			
 			offset = 0;
 		}
 		else
 		{
-			offset = Integer.parseInt((String)session.getAttribute("col_offset")) - 10;
+			offset = col_offset - 10;
 		}
 		if (offset < 0)
 		{
 			offset = 0;
 		}
-		session.setAttribute("col_offset", Integer.toString(offset));
+		return offset;
 	}
 	
 	
-	public static final void next_rows(HttpSession session)
+	public static final int next_rows(int row_offset)
 	{
 		int offset = 0;
-		if(session.getAttribute("row_offset") == null)
-		{
-			offset = 20;
-		}
-		else
-		{
-			offset = Integer.parseInt((String)session.getAttribute("row_offset")) + 20;
-		}
-		session.setAttribute("row_offset", Integer.toString(offset));
+		offset = row_offset + 20;
+		return offset;
 	}
 	
 	
-	public static final void next_cols(HttpSession session)
+	public static final int next_cols(int col_offset)
 	{
 		int offset = 0;
-		if(session.getAttribute("col_offset") == null)
-		{
-			offset = 10;
-		}
-		else
-		{
-			offset = Integer.parseInt((String)session.getAttribute("col_offset")) + 10;
-		}
-		session.setAttribute("col_offset", Integer.toString(offset));
+		offset = col_offset + 20;
+		return offset;
 	}
 	
 	

@@ -42,7 +42,7 @@ ResultSet rs=null,rs_2=null,rs_3=null,rs_4=null;
 String SQL=null;
 String rows=null, age=null, state=null, category=null, action=null;
 String rows_sql=null, age_sql=null, state_sql=null, category_sql=null, action_sql=null;
-int age_limit;
+int row_offset=0, col_offset=0, age_limit;
 try
 {
 	try{Class.forName("org.postgresql.Driver");}catch(Exception e){System.out.println("Driver error");}
@@ -75,6 +75,14 @@ try
 	
 	if(request.getParameter("action") != null)
 	{
+		if(request.getParameter("row_offset") == null)
+			row_offset = 0;
+		else
+			row_offset = Integer.parseInt(request.getParameter("row_offset"));
+		if(request.getParameter("col_offset") == null)
+			col_offset = 0;
+		else
+			col_offset = Integer.parseInt(request.getParameter("col_offset"));
 		action = request.getParameter("action");
 		rows = request.getParameter("rows");
 		age = request.getParameter("age");
@@ -83,30 +91,38 @@ try
 		
 		if(action.equals("Prev20Rows"))
 		{
-			Util.prev_rows(session);
+			row_offset = Util.prev_rows(row_offset);
+			//Util.prev_rows(session);
 		}
 		else if(action.equals("Next20Rows"))
 		{
-			Util.next_rows(session); 
+			row_offset = Util.next_rows(row_offset);
+			//Util.next_rows(session); 
 		}
 		else if(action.equals("Prev10Cols"))
 		{
-			Util.prev_cols(session);
+			col_offset = Util.prev_rows(col_offset);
+			//Util.prev_cols(session);
 		}
 		else if(action.equals("Next10Cols"))
 		{
-			Util.next_cols(session);
+			col_offset = Util.next_rows(col_offset);
+			//Util.next_cols(session);
 		}
 		else
 		{
-			Util.reset_rows(session);
-			Util.reset_cols(session);
+			col_offset = 0;
+			row_offset = 0;
+			//Util.reset_rows(session);
+			//Util.reset_cols(session);
 		}
 		
 	}
 	else {
-		Util.reset_rows(session);
-		Util.reset_cols(session);
+		//Util.reset_rows(session);
+		//Util.reset_cols(session);
+		col_offset = 0;
+		row_offset = 0;
 		action = "";
 		rows = "customers";
 		age = "all";
@@ -173,14 +189,14 @@ try
 				 "group by p.name,p.id "+
 				 "order by  p.name asc "+
 				 "limit 10 " +
-				 "offset "+ session.getAttribute("col_offset") +
+				 "offset "+ col_offset +
 				 ";";
 	String SQL_2="select  "+rows_sql+", sum(s.quantity*p.price) as amount from users u, sales s,  products p "+
 				  "where s.uid=u.id and s.pid=p.id "+age_sql+state_sql+category_sql+
 				  "group by "+rows_sql+" "+ 
 				  "order by "+rows_sql+" asc "+
 				  "limit 20 " +
-				  "offset "+ session.getAttribute("row_offset") +
+				  "offset "+ row_offset +
 		   		  ";";
 
 	rs=stmt.executeQuery(SQL_1);
@@ -278,6 +294,8 @@ try
 			<td colspan="11" >
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Next20Rows">
 					<input type="hidden" name="action" value="Next20Rows">
+					<input type="hidden" name="row_offset" value="<%=row_offset%>">					
+					<input type="hidden" name="col_offset" value="<%=col_offset%>">
 					<input type="hidden" name="rows" value="<%=rows%>">
 					<input type="hidden" name="age" value="<%=age%>">
 					<input type="hidden" name="state" value="<%=state%>">
@@ -302,6 +320,8 @@ try
 			<td colspan="11">
 				<form method="GET" action="do_Analysis_States_3.jsp" value="Next10Cols">
 					<input type="hidden" name="action" value="Next10Cols">
+					<input type="hidden" name="row_offset" value="<%=row_offset%>">					
+					<input type="hidden" name="col_offset" value="<%=col_offset%>">
 					<input type="hidden" name="rows" value="<%=rows%>">
 					<input type="hidden" name="age" value="<%=age%>">
 					<input type="hidden" name="state" value="<%=state%>">
@@ -322,74 +342,75 @@ try
 		Row:
 				<select name="rows">
 		
-				<option value="customers" selected="selected">Customers</option>
-				<option value="states">States</option>
+				<option value="customers" <%=Util.selector("customer",rows)%>>Customers</option>
+				<option value="states" <%=Util.selector("states",rows)%>>States</option>
 				
 				</select> <p />
 				
 		<h3> Filters </h3>
 				
+				
 		Age:
-			<select name="age">
-				<option value="all" selected="selected">All</option>
-				<option value="0">12-18</option>
-				<option value="1">18-45</option>
-				<option value="2">45-65</option>
-				<option value="3">65-</option>
+			<select name="age" value="<%=age%>">
+				<option value="all" <%=Util.selector("all",age)%>>All</option>
+				<option value="0" <%=Util.selector("0",age)%>>12-18</option>
+				<option value="1" <%=Util.selector("1",age)%>>18-45</option>
+				<option value="2" <%=Util.selector("2",age)%>>45-65</option>
+				<option value="3" <%=Util.selector("3",age)%>>65-</option>
 			</select> <p/>
 		
 		State: 
 			<select name="state">
-				<option value="all" selected="selected">All States</option>
-				<option value="Alaska">Alaska</option>
-				<option value="Arizona">Arizona</option> 
-				<option value="Arkansas">Arkansas</option> 
-				<option value="California">California</option> 
-				<option value="Colorado">Colorado</option> 
-				<option value="Connecticut">Connecticut</option> 
-				<option value="Delaware">Delaware</option> 
-				<option value="Florida">Florida</option> 
-				<option value="Georgia">Georgia</option> 
-				<option value="Hawaii">Hawaii</option> 
-				<option value="Idaho">Idaho</option> 
-				<option value="Illinois">Illinois</option> 
-				<option value="Indiana">Indiana</option> 
-				<option value="Iowa">Iowa</option> 
-				<option value="Kansas">Kansas</option> 
-				<option value="Kentucky">Kentucky</option> 
-				<option value="Louisiana">Louisiana</option> 
-				<option value="Maine">Maine</option> 
-				<option value="Maryland">Maryland</option> 
-				<option value="Massachusetts">Massachusetts</option> 
-				<option value="Michigan">Michigan</option> 
-				<option value="Minnesota">Minnesota</option> 
-				<option value="Mississippi">Mississippi</option> 
-				<option value="Missouri">Missouri</option> 
-				<option value="Montana">Montana</option> 
-				<option value="Nebraska">Nebraska</option> 
-				<option value="Nevada">Nevada</option> 
-				<option value="New Hampshire">New Hampshire</option> 
-				<option value="New Jersey">New Jersey</option> 
-				<option value="New Mexico">New Mexico</option>
-				<option value="New York">New York</option>
-			 	<option value="North Carolina">North Carolina</option> 
-			 	<option value="North Dakota">North Dakota</option> 
-			 	<option value="Ohio">Ohio</option> 
-			 	<option value="Oklahoma">Oklahoma</option> 
-			 	<option value="Oregon">Oregon</option> 
-			 	<option value="Pennsylvania">Pennsylvania</option> 
-			 	<option value="Rhode Island">Rhode Island</option> 
-			 	<option value="South Carolina">South Carolina</option> 
-			 	<option value="South Dakota">South Dakota</option> 
-			 	<option value="Tennessee">Tennessee</option> 
-			 	<option value="Texas">Texas</option> 
-			 	<option value="Utah">Utah</option> 
-			 	<option value="Vermont">Vermont</option> 
-			 	<option value="Virginia">Virginia</option> 
-			 	<option value="Washington">Washington</option> 
-			 	<option value="West Virginia">West Virginia</option> 
-			 	<option value="Wisconsin">Wisconsin</option> 
-			 	<option value="Wyoming">Wyoming</option> 
+				<option value="all" <%=Util.selector("all",state)%>>All States</option>
+				<option value="Alaska" <%=Util.selector("Alaska",state)%>>Alaska</option>
+				<option value="Arizona" <%=Util.selector("Arizona",state)%>>Arizona</option> 
+				<option value="Arkansas" <%=Util.selector("Arkansas",state)%>>Arkansas</option> 
+				<option value="California" <%=Util.selector("California",state)%>>California</option> 
+				<option value="Colorado" <%=Util.selector("Colorado",state)%>>Colorado</option> 
+				<option value="Connecticut" <%=Util.selector("Connecticut",state)%>>Connecticut</option> 
+				<option value="Delaware" <%=Util.selector("Delaware",state)%>>Delaware</option> 
+				<option value="Florida" <%=Util.selector("Florida",state)%>>Florida</option> 
+				<option value="Georgia" <%=Util.selector("Georgia",state)%>>Georgia</option> 
+				<option value="Hawaii" <%=Util.selector("Hawaii",state)%>>Hawaii</option> 
+				<option value="Idaho" <%=Util.selector("Idaho",state)%>>Idaho</option> 
+				<option value="Illinois" <%=Util.selector("Illinois",state)%>>Illinois</option> 
+				<option value="Indiana" <%=Util.selector("Indiana",state)%>>Indiana</option> 
+				<option value="Iowa" <%=Util.selector("Iowa",state)%>>Iowa</option> 
+				<option value="Kansas" <%=Util.selector("Kansas",state)%>>Kansas</option> 
+				<option value="Kentucky" <%=Util.selector("Kentucky",state)%>>Kentucky</option> 
+				<option value="Louisiana" <%=Util.selector("Louisiana",state)%>>Louisiana</option> 
+				<option value="Maine" <%=Util.selector("Maine",state)%>>Maine</option> 
+				<option value="Maryland" <%=Util.selector("Maryland",state)%>>Maryland</option> 
+				<option value="Massachusetts" <%=Util.selector("Massachusetts",state)%>>Massachusetts</option> 
+				<option value="Michigan" <%=Util.selector("Michigan",state)%>>Michigan</option> 
+				<option value="Minnesota" <%=Util.selector("Minnesota",state)%>>Minnesota</option> 
+				<option value="Mississippi" <%=Util.selector("Mississippi",state)%>>Mississippi</option> 
+				<option value="Missouri" <%=Util.selector("Missouri",state)%>>Missouri</option> 
+				<option value="Montana" <%=Util.selector("Montana",state)%>>Montana</option> 
+				<option value="Nebraska" <%=Util.selector("Nebraska",state)%>>Nebraska</option> 
+				<option value="Nevada" <%=Util.selector("Nevada",state)%>>Nevada</option> 
+				<option value="New Hampshire" <%=Util.selector("New Hampshire",state)%>>New Hampshire</option> 
+				<option value="New Jersey" <%=Util.selector("New Jersey",state)%>>New Jersey</option> 
+				<option value="New Mexico" <%=Util.selector("New Mexico",state)%>>New Mexico</option>
+				<option value="New York" <%=Util.selector("New York",state)%>>New York</option>
+			 	<option value="North Carolina" <%=Util.selector("North Carolina",state)%>>North Carolina</option> 
+			 	<option value="North Dakota" <%=Util.selector("North Dakota",state)%>>North Dakota</option> 
+			 	<option value="Ohio" <%=Util.selector("Ohio",state)%>>Ohio</option> 
+			 	<option value="Oklahoma" <%=Util.selector("Oklahoma",state)%>>Oklahoma</option> 
+			 	<option value="Oregon" <%=Util.selector("Oregon",state)%>>Oregon</option> 
+			 	<option value="Pennsylvania" <%=Util.selector("Pennsylvania",state)%>>Pennsylvania</option> 
+			 	<option value="Rhode Island" <%=Util.selector("Rhode Island",state)%>>Rhode Island</option> 
+			 	<option value="South Carolina" <%=Util.selector("South Carolina",state)%>>South Carolina</option> 
+			 	<option value="South Dakota" <%=Util.selector("South Dakota",state)%>>South Dakota</option> 
+			 	<option value="Tennessee" <%=Util.selector("Tennessee",state)%>>Tennessee</option> 
+			 	<option value="Texas" <%=Util.selector("Texas",state)%>>Texas</option> 
+			 	<option value="Utah" <%=Util.selector("Utah",state)%>>Utah</option> 
+			 	<option value="Vermont" <%=Util.selector("Vermont",state)%>>Vermont</option> 
+			 	<option value="Virginia" <%=Util.selector("Virginia",state)%>>Virginia</option> 
+			 	<option value="Washington" <%=Util.selector("Washington",state)%>>Washington</option> 
+			 	<option value="West Virginia" <%=Util.selector("West Virginia",state)%>>West Virginia</option> 
+			 	<option value="Wisconsin" <%=Util.selector("Wisconsin",state)%>>Wisconsin</option> 
+			 	<option value="Wyoming" <%=Util.selector("Wyoming",state)%>>Wyoming</option> 
 			</select> <p />
 			
 			
@@ -408,7 +429,7 @@ try
 				{
 					categories.add(rs_4.getString("name"));
 				%>
-					<option value="<%=rs_4.getString("name")%>"><%=rs_4.getString("name")%></option>
+					<option value="<%=rs_4.getString("name")%>" <%=Util.selector(rs_4.getString("name"),category)%>><%=rs_4.getString("name")%></option>
 				<% 
 				} 
 				%>
