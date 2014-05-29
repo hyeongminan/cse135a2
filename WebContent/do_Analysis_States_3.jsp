@@ -219,6 +219,8 @@ try
 		   		 ";";
 	}
 
+	long starttime = System.nanoTime();
+
 	stmt.execute(SQL_1);
 	SQL_1 = "select * from temp1;";
 	rs=stmt.executeQuery(SQL_1);
@@ -237,7 +239,7 @@ try
 		p_list.add(item);
 	
 	}
-	
+
 	stmt.execute(SQL_2);
 	SQL_2 = "select * from temp;";
 	rs_2=stmt_2.executeQuery(SQL_2);//state not id, many users in one state
@@ -271,8 +273,9 @@ try
 	}
 			
 	rs_3=stmt_3.executeQuery(SQL_3);
-	rs_3.next();
-		
+	boolean rs_3_empty_flag = false;
+	if(!rs_3.next())
+		rs_3_empty_flag = true;
 	
 //    out.println("product #:"+p_list.size()+"<br>state #:"+s_list.size()+"<p>");
 	int i=0,j=0;
@@ -296,7 +299,6 @@ try
 %>
 		</tr>
 <%	
-	boolean rs_3_empty_flag = false;
 	for(i=0;i<limit2;i++)
 	{
 		s_name			=	s_list.get(i).getName();
@@ -343,7 +345,11 @@ try
 		out.println("</tr>");
 	}
 	
-	session.setAttribute("TOP_10_Products",p_list);
+	long endtime = System.nanoTime();
+	
+	System.out.println("Overall time to load the page in seconds: "+((endtime - starttime)/1000000000));
+	
+	//session.setAttribute("TOP_10_Products",p_list);
 	
 	if(s_list.size() == 20)
 	{
