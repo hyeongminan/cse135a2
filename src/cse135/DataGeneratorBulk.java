@@ -40,10 +40,10 @@ public class DataGeneratorBulk
 		int Num_products	=	1000; //1000   10000
 		int Num_sales		=	10000;//10000 100000
 		
-		 String  usersPath		=	"/home/eddie/Documents/users.txt",
-	    		 categoriesPath	=	"/home/eddie/Documents/categories.txt",
-	    		 productsPath	=	"/home/eddie/Documents/products.txt",
-	     		 salesPath		=	"/home/eddie/Documents/sales.txt";
+		 String  usersPath		=	"C:/Users/users.txt",
+	    		 categoriesPath	=	"C:/Users/categories.txt",
+	    		 productsPath	=	"C:/Users/products.txt",
+	     		 salesPath		=	"C:/Users/sales.txt";
 		
 		DataGeneratorBulk dg=new DataGeneratorBulk();
 		dg.createData(usersPath, categoriesPath, productsPath, salesPath, Num_users,Num_categories,Num_products,Num_sales);

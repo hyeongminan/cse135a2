@@ -235,7 +235,7 @@ Search for products:
 	}
 	finally
 	{
-		conn.close();
+		//conn.close();
 	}
 }
 else
